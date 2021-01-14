@@ -1,0 +1,36 @@
+- 시스템 관리 -
+
+part 1
+- script를 이용해서 작업 자동화
+- "docker" 사용 -> 완전한 웹서버 설치
+- 다중 서비스 : Wordpress, phpMyAdmin, SQL database
+
+
+part 2
+- 서버 구성에 필요한 모든 파일을 srcs폴더에 저장
+- Dockerfile은 repository root에 있어야 한다.
+(이것으로 container를 build)
+- docker-compose를 사용 X
+- Wordpress 웹 사이트에 필요한 모든 파일도 srcs폴더에 있어야 합니다.
+
+
+part 3
+- 하나의 docker container에서만 Nginx로 웹서버를 설정
+(container OS는 debian buster여야 합니다.)
+- 웹서버는 여러 서비스를 동시에 실행 되어야 합니다.
+(Wordpress 웹 사이트, phpMyAdmin, MySQL -> 만들어야 한다.)
+- SQL database가 WordPress 및 phpMyAdmin과 함께 작동하는 지 확인
+- 서버가 SSL 프로토콜을 사용할 수 있어야 한다.
+- URL에 따라 서버가 올바른 웹사이트로 redirects되는지 확인
+- 비활성(disabled)해야 하는 autoindex를 사용하여 서버가 실행 중인지 확인
+
+<찾아 볼 것>
+- docker
+- Nginx 
+- phpMyAdmin
+- WordPress
+- SSL 프로토콜 
+- SQL
+
+<help_site>
+https://yeosong1.github.io/ft_server.html
