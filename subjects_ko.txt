@@ -31,6 +31,3 @@ part 3
 - WordPress
 - SSL 프로토콜 
 - SQL
-
-<help_site>
-https://yeosong1.github.io/ft_server.html
