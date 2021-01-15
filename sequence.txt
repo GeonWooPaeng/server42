@@ -1,0 +1,51 @@
+나의 환경
+- wsl2를 사용 -
+
+1. Docker 설치
+https://hub.docker.com/editions/community/docker-ce-desktop-windows
+
+- General 탭에서 Use the WSL2 based engine 옵션 클릭
+- Resource -> WSL Integration 페이지로 이동해서 설정을 확인
+
+2. Debian(buster) 사용
+- docker hub에서 debian:buster이미지 가져오기
+$sudo docker pull debian:buster
+
+3. docker로 debian(buster)환경 실행 및 접속(debian bash 접속)
+$sudo docker run -it --name con_debian -p 80:80 -p 443:443 debian:buster 
+
++ 옵션
+-i -> interactive(입 출력)
+-t -> tty(터미널)활성화
+--name [컨테이너 이름] -> 컨테이너 이름 지정
+-p 호스트포트번호:컨테이너포트번호 -> 컨테이너의 포트를 개방한 뒤 호스트포트와 연결한다.
+
+4. debian buster에서 Nginx, cURL 설치
+cURL은 서버와 통신할 수 있는 commend 명령어 툴 
+(url을 가지고 할 수 있는 것들을 다 할 수 있다.)
+cURL -> https://shutcoding.tistory.com/23
+
+$sudo apt-get update
+$sudo pat-get upgrade
+$sudo apt-get -y install nginx curl 
+
++옵션
+-y -> 설치하겠냐는 물음에 y를 눌러주는 것
+
+5. Nginx 서버 에러확인/실행/확인/중지
+$sudo nginx -t
+$sudo service nginx start
+$sudo service nginx status
+$sudo curl localhost 
++
+https://sukill.tistory.com/2 - 윈도우에서 localhost보게 하는 법
+https://codingcoding.tistory.com/1204 - 윈도우에서 localhost보게 하는 법
+브라우저에 localhost:80 입력 - 설정해 놓은 곳이 보인다.
+다시 %SystemDrive%\inetpub\wwwroot로 해놓기
+
+$sudo service nginx stop
+
+5. self-signed SSL 인증서 만들기
+- SSL 위에서 돌아가는 HTTP => HTTPS를 실행하기 위한 인증서
+- openssl이용(개인 키(.key), 서면요청파일(.csr), 인증서파일(.crt))
+$sudo apt-get -y install openssl
