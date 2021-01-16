@@ -7,12 +7,16 @@ https://hub.docker.com/editions/community/docker-ce-desktop-windows
 - General 탭에서 Use the WSL2 based engine 옵션 클릭
 - Resource -> WSL Integration 페이지로 이동해서 설정을 확인
 
+
 2. Debian(buster) 사용
 - docker hub에서 debian:buster이미지 가져오기
 $sudo docker pull debian:buster
 
+
 3. docker로 debian(buster)환경 실행 및 접속(debian bash 접속)
 $sudo docker run -it --name con_debian -p 80:80 -p 443:443 debian:buster 
+$sudo apt-get update
+$sudo apt-get upgrade 
 
 + 옵션
 -i -> interactive(입 출력)
@@ -20,13 +24,14 @@ $sudo docker run -it --name con_debian -p 80:80 -p 443:443 debian:buster
 --name [컨테이너 이름] -> 컨테이너 이름 지정
 -p 호스트포트번호:컨테이너포트번호 -> 컨테이너의 포트를 개방한 뒤 호스트포트와 연결한다.
 
+
 4. debian buster에서 Nginx, cURL 설치
 cURL은 서버와 통신할 수 있는 commend 명령어 툴 
 (url을 가지고 할 수 있는 것들을 다 할 수 있다.)
 cURL -> https://shutcoding.tistory.com/23
 
 $sudo apt-get update
-$sudo pat-get upgrade
+$sudo apt-get upgrade
 $sudo apt-get -y install nginx curl 
 
 +옵션
@@ -37,15 +42,114 @@ $sudo nginx -t
 $sudo service nginx start
 $sudo service nginx status
 $sudo curl localhost 
-+
-https://sukill.tistory.com/2 - 윈도우에서 localhost보게 하는 법
-https://codingcoding.tistory.com/1204 - 윈도우에서 localhost보게 하는 법
-브라우저에 localhost:80 입력 - 설정해 놓은 곳이 보인다.
-다시 %SystemDrive%\inetpub\wwwroot로 해놓기
-
 $sudo service nginx stop
+
++
+nginx를 실행폴더의 ../ (전)에 docker file이 있어야 하는 것 같다.
+
 
 5. self-signed SSL 인증서 만들기
 - SSL 위에서 돌아가는 HTTP => HTTPS를 실행하기 위한 인증서
 - openssl이용(개인 키(.key), 서면요청파일(.csr), 인증서파일(.crt))
 $sudo apt-get -y install openssl
+$sudo openssl req -x509 -newkey rsa:4096 -nodes -sha256 -keyout ft_server.key -out ft_server.crt -days 365 -subj "/C=KR/ST=SEOUL/L=SEOUL/O=42/OU=gon/CN=localhost"
+=> ft_server.key, localhost.crt 생성
+$sudo mkdir /etc/nginx/ssl
+$sudo mv ft_server.key /etc/nginx/ssl/
+$sudo mv ft_server.crt /etc/nginx/ssl/
+$sudo chmod 600 /etc/nginx/ssl/*
+=> 보안 및 인증 관련 파일은 권한을 root만 허용
+
++옵션
+req: 인증서 요청 및 인증성 생성 유틸
+-x509: 인증서 요청 대신 자체 서명된 인증서를 출력(테스트 인증서 or 자체 서명 루트 CA생성하는 데 사용)
+-newkey: 개인키 생성
+rea:4096: SSL/TLS에 가장 많이 쓰이는 공개키 암호화 알고리즘
+-nodes: 개인키를 암호화하지 않기 위한 옵션(없을 시 4자리 이상 암호 입력)
+-sha256: SHA-256 기반 인증서 생성
+-keyout [key 파일 이름]: 키 파일 생성(키 파일이름 지정)
+-out [인증서 이름]: 인증서 생성(인증서 이름 지정)
+days 365: 인증서의 유효기간
+-subj"": subject를 입력하기 위한 옵션 ex) -subj"CN=localhost" => CN입력
+
+
+6. nginx ssl 설정하기(hppts로 리다이렉션 설정)
+- nginx 설치 후 디렉토리 구조
+https://wiki.debian.org/Nginx/DirectoryStructure
+$cd /etc/nginx/sites-available 
+$sudo vim default (수정)
+
++수정내용
+- 301(permanently moved)는 이 페이지는 영구적으로 이동되었으므로 이 주소로 연결하시오
+- $host, $request_uri는 nginx의 변수로
+(http://localhost/wordpress 접속하면 host = localhost, request_uri = /wordpress)
+- 80번 포트로 들어오는 것은 https://domain으로 이동
+$sudo service nginx reload
+
+7. http://localhost가 안전하지 않은 사이트여서 나오지 않을 경우
+- 1. NET::ERR_CERT_REVOKED 오른쪽 빈칸아무대나 마우스 좌클릭 
+- 2. 이상한 것 많이 보인다
+- 3. 그냥 키보드로 thisisunsafe 친다. (치는 것이 보이지 않는다.)
+
+
+8. php-fpm 설치 / Nginx 설정
+$sudo apt-get -y install php-fpm
+$cd /etc/nginx/sites-available 
+$sudo vim default (수정)
+
++수정내용
+#PHP 추가 부분
+
+
+9. Nginx autoindex 설정
+$cd /etc/nginx/sites-available 
+$sudo vim default (수정)
+
+10. mariadb(mysql 진화판)/ php-mysql / php-mbstring 설치
+- debian9 버전 이후부터 mariadb지원 하기 때문
+- php-mysql은 php에서 mysql(데이터베이스)에 접근하도록 해주는 모듈
+- php-mbstring은 2바이트 확장 문자를 읽도록하는 확장자(경고 방지용)
+$sudo apt-get -y install mariadb-server
+$sudo apt-get -y install php-mysql
+$sudo apt-get -y install php-mbstring
+
+
+11. Wordpress 설치
+- 웹서버로부터 직접받아와야한다(wget) + apt-get으로 설치 X
+$sudo apt-get install wget 
+$sudo wget https://wordpress.org/latest.tar.gz
+$sudo tar -xvf latest.tar.gz 
+
++옵션
+-x: 묶음 해제
+-v: 묶음/해제 과정을 화면에 표시
+-f: 파일 이름을 지정
+
+$cd wordpress
+$vim wp-confing-sample.php(수정) 
+
++ 수정
+database_name_here -> wordpress
+username_here -> gpaeng
+password_here -> gpaeng
+$cd ..
+$sudo rm -rf latest.tar.gz
+$sudo mv ./wordpress/ /var/www/html/
+$sudo chown www-data:www-data /var/www/html/wordpress
+
++명령어
+chown: 권한 설정으로 wordpress의 유저, 그룹을 www-data로 설정
+
+
+12. Database 설정
+- Database에 wordpress 추가
+$sudo service mysql start
+$sudo mysql 
+MariaDB [(none)]> CREATE DATABASE wordpress;
+MariaDB [(none)]> SHOW DATABASES;
+MariaDB [(none)]> CREATE USER 'gpaeng'@'localhost' IDENTIFIED BY 'gpaeng'; 
++ 아이디 gpaeng 비밀번호 gpaeng 생성
+MariaDB [(none)]> GRANT ALL PRIVILEGES ON wordpress.* TO 'gpaeng'@'localhost' WITH GRANT OPTION;
++ @'localhost'는 로컬 접속만 허용(권한 부여), @'%'이면 외부접속 허용
+MariaDB [(none)]> USE wordpress;
+MariaDB [(none)]> SHOW TABLES;
