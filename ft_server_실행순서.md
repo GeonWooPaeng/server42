@@ -176,7 +176,7 @@ days 365: 인증서의 유효기간
 
 <br/>
 
-## nginx ssl 설정하기(hppts로 리다이렉션 설정)
+## nginx ssl 설정하기(https로 리다이렉션 설정)
 
 <br/>
 

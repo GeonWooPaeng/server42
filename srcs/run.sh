@@ -20,7 +20,10 @@ cp -rp ./tmp/wp-config.php /var/www/html/wordpress
 
 #sql 아직 안함
 service mysql start
-https://escane.tistory.com/138 - 사이트
+echo "CREATE DATABASE wordpress;"
+echo "CREATE USER 'gpaneg'@'localhost' IDENTIFIED BY 'gpaeng;"
+echo "GRANT ALL PRIVILEGES ON wordpress.* TO 'gpaeng'@'localhost' WITH GRANT OPTION;"
+- 사이트 -
 https://cnpnote.tistory.com/entry/SQL-%EC%89%98-%EB%B3%80%EC%88%98%EB%A1%9C-MySQL%EC%9D%98-%EC%BF%BC%EB%A6%AC-%EA%B2%B0%EA%B3%BC%EB%A5%BC-%EC%A0%80%EC%9E%A5
 
 #phpmyadmin
@@ -30,7 +33,6 @@ rm -rf phpMyAdmin-5.0.2-all-languages.tar.gz
 mv phpMyAdmin-5.0.2-all-languages phpmyadmin
 mv phpmyadmin /var/www/html/
 cp -rp /tmp/confit-inc.php /var/www/html/phpmyadmin
-
 
 service nginx start
 service mysql restart

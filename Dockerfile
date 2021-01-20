@@ -10,11 +10,11 @@ RUN		apt-get -y install nginx mariadb-server php-mysql php-mbstring openssl vim 
 COPY	./srcs/default ./tmp
 COPY	./srcs/wp-config.php ./tmp
 COPY	./srcs/config.inc.php ./tmp 
-COPY	./srcs/server.sh ./
+COPY	./srcs/run.sh ./
 
 EXPOSE 80
 EXPOSE 443
 # 해당 컨테이너가 80, 443 port를 사용할 예정
 # 실제로 포트를 열기 위해서는 run 명령어에서 -p 옵션을 사용해야 한다.
 
-CMD		bash server.sh
+CMD		bash run.sh
