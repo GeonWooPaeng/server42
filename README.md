@@ -1,7 +1,14 @@
 # ft_server
 
  <br/>
-
+ 
+ - 웹 서버, docker을 실행 시켜보는 
+ - ssl protocol을 통해 http를 https로 리다이렉트
+ - debian buster(os), nginx, Wordpress, Mysql, phpmyadmin에 관한 dockerfile 생성 및 연동
+ - srcs file내에는 관련 내용 넣어 놓기(.sh, .php)
+ 
+ <br/>
+ 
 ![ft_server img](https://user-images.githubusercontent.com/53526987/104583012-f2513b80-56a3-11eb-9fd6-0ffd33c11eb5.PNG)
 
 출처 : https://stitchcoding.tistory.com/2 (유사)
