@@ -2,7 +2,13 @@
 
  <br/>
  
- - 웹 서버, docker을 실행 시켜보는 
+ - 웹 서버, docker을 실행 시켜보는 과제 즉, docker을 이용하여 웹서버를 만드는 것입니다.
+ - 웹 서버(Nginx)를 설치하고 docker container 설치 => 이 container의 OS는 debian buster입니다.
+ - 웹 서버와 Wordpress, phpMyAdmin, MySQL 이 연동되어야 합니다.
+ - 서버는 SSL 프로토콜을 사용할 수 있어야 한다.
+ - 언제든 autoindex가 적용되어야 한다.
+ 
+<큰 틀>
  - ssl protocol을 통해 http를 https로 리다이렉트
  - debian buster(os), nginx, Wordpress, Mysql, phpmyadmin에 관한 dockerfile 생성 및 연동
  - srcs file내에는 관련 내용 넣어 놓기(.sh, .php)
